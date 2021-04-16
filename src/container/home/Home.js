@@ -1,4 +1,5 @@
-import WeatherInfo from 'components/cards/WeatherInfo';
+import CurrentWeather from 'components/cards/CurrentWeather';
+import ExtendedForecast from 'components/cards/ExtendedForecast';
 import Header from 'components/header/Header';
 import SearchBar from 'components/search/SearchBar';
 import { useDebouncedEffect } from 'hooks/useDebouncedEffect';
@@ -31,7 +32,8 @@ const Home = () => {
         onSearchChanged={onSearchChanged}
         onResultClicked={onResultClicked}
       />
-      <WeatherInfo />
+      <CurrentWeather />
+      <ExtendedForecast />
     </>
   );
 };

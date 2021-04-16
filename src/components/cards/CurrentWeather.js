@@ -1,21 +1,22 @@
-import Switch from 'components/switch/Switch';
+import { ArrowDownward, ArrowUpward } from '@material-ui/icons';
 import logo from 'assets/images/github.png';
 import humidity from 'assets/images/humidity.png';
-import wind from 'assets/images/wind.png';
 import pressure from 'assets/images/pressure.png';
+import wind from 'assets/images/wind.png';
+import Switch from 'components/switch/Switch';
 import {
-  CardWrapper,
-  CardHeader,
   CardBody,
-  CardIllustration,
-  IllustrationWrapper,
-  DegreeWrapper,
   CardDegree,
-  InfoWrapper,
+  CardHeader,
+  CardIllustration,
   CardInfo,
+  CardWrapper,
+  DegreeWrapper,
+  IllustrationWrapper,
+  InfoWrapper,
 } from './styled';
 
-const WeatherInfo = () => {
+const CurrentWeather = () => {
   return (
     <CardWrapper>
       <CardHeader>
@@ -33,15 +34,19 @@ const WeatherInfo = () => {
           <span>clear sky</span>
         </IllustrationWrapper>
         <div>
-          <p>Feels like 34*</p>
+          <p>
+            Feels like 34<sup>o</sup>
+          </p>
           <DegreeWrapper>
             <CardDegree>
-              <p>^</p>
-              <p>10*</p>
+              <ArrowUpward />
+              <p>10</p>
+              <span>O</span>
             </CardDegree>
             <CardDegree>
-              <p>V</p>
-              <p>5*</p>
+              <ArrowDownward />
+              <p>5</p>
+              <span>O</span>
             </CardDegree>
           </DegreeWrapper>
           <InfoWrapper>
@@ -73,4 +78,4 @@ const WeatherInfo = () => {
   );
 };
 
-export default WeatherInfo;
+export default CurrentWeather;
