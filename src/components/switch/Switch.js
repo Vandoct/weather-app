@@ -6,8 +6,8 @@ const Switch = (props) => {
 
   return (
     <SwitchStyled onClick={onToggle}>
-      {toggled && <span className="on">F</span>}
-      {!toggled && <span className="off">C</span>}
+      {toggled && <span className="on">C</span>}
+      {!toggled && <span className="off">F</span>}
       <Slider
         style={{
           transform: toggled ? ' translateX(28px)' : ' translateX(0px)',
