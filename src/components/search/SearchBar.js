@@ -4,7 +4,7 @@ import SearchResult from './SearchResult';
 import { SearchStyled, SearchWrapper } from './styled';
 
 const SearchBar = (props) => {
-  const { cities, onSearchChanged, onResultClicked } = props;
+  const { cities, onSearchChanged, onResultClicked, reference } = props;
 
   return (
     <>
@@ -17,7 +17,11 @@ const SearchBar = (props) => {
         />
         <MyLocationOutlined />
       </SearchWrapper>
-      <SearchResult results={cities} onClick={onResultClicked} />
+      <SearchResult
+        results={cities}
+        onClick={onResultClicked}
+        reference={reference}
+      />
     </>
   );
 };
@@ -31,6 +35,7 @@ SearchBar.propTypes = {
   ).isRequired,
   onSearchChanged: PropTypes.func.isRequired,
   onResultClicked: PropTypes.func.isRequired,
+  reference: PropTypes.shape({}).isRequired,
 };
 
 export default SearchBar;

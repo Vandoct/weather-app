@@ -1,7 +1,14 @@
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+const places = axios.create({
+  baseURL: process.env.REACT_APP_API_PLACES,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-export default api;
+const weather = axios.create({
+  baseURL: process.env.REACT_APP_API_WEATHER,
+});
+
+export { places, weather };

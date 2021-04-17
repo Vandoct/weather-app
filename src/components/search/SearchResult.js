@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import { ResultWrapper, SuggestionItem } from './styled';
 
 const SearchResult = (props) => {
-  const { results, onClick } = props;
+  const { results, onClick, reference } = props;
 
   return (
-    <ResultWrapper>
+    <ResultWrapper ref={reference}>
       {results.map((item) => (
         <SuggestionItem key={item.id} onClick={() => onClick(item.label)}>
           {item.label}
@@ -23,6 +23,7 @@ SearchResult.propTypes = {
     })
   ).isRequired,
   onClick: PropTypes.func.isRequired,
+  reference: PropTypes.shape({}).isRequired,
 };
 
 export default SearchResult;

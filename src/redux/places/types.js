@@ -1,0 +1,3 @@
+export const PLACES_BEGIN = 'PLACES_BEGIN';
+export const PLACES_SUCCESS = 'PLACES_SUCCESS';
+export const PLACES_ERROR = 'PLACES_ERROR';
