@@ -6,6 +6,7 @@ import { useDebouncedEffect } from 'hooks/useDebouncedEffect';
 import { useOutsideAlerter } from 'hooks/useOutsideAlerter';
 import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { isEmptyArray, isEmptyObject } from 'utils/helper';
 import { getCurrentWeather, getWeatherForecast, search } from '../../redux';
 
@@ -34,6 +35,39 @@ const Home = () => {
     dispatch(getWeatherForecast(city));
   };
 
+  const handleGetCurrentLocation = () => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (location) => {
+          const { latitude, longitude } = location.coords;
+          dispatch(getCurrentWeather('', latitude, longitude));
+          dispatch(getWeatherForecast('', latitude, longitude));
+        },
+        (error) => {
+          toast.error(error.message, {
+            position: 'bottom-right',
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      );
+    } else {
+      toast.error('Geolocation is not available!', {
+        position: 'bottom-right',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
   const handleToggle = () => {
     setIsCelcius((prevState) => !prevState);
   };
@@ -45,6 +79,7 @@ const Home = () => {
         cities={places}
         onSearchChanged={onSearchChanged}
         onResultClicked={onResultClicked}
+        onLocationClicked={handleGetCurrentLocation}
         reference={searchRef}
       />
       {!isEmptyObject(weather) && (

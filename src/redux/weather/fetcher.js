@@ -12,13 +12,22 @@ import {
   weatherForecastError,
 } from './actions';
 
-export const getCurrentWeather = (query) => (dispatch) => {
+export const getCurrentWeather = (query, latitude, longitude) => (dispatch) => {
   dispatch(weatherCurrentBegin());
+
+  const params = query.length
+    ? {
+        q: query,
+      }
+    : {
+        lat: latitude,
+        lon: longitude,
+      };
 
   weather
     .get('/weather', {
       params: {
-        q: query,
+        ...params,
         appid: process.env.REACT_APP_API_KEY,
       },
     })
@@ -59,13 +68,24 @@ export const getCurrentWeather = (query) => (dispatch) => {
     });
 };
 
-export const getWeatherForecast = (query) => (dispatch) => {
+export const getWeatherForecast = (query, latitude, longitude) => (
+  dispatch
+) => {
   dispatch(weatherForecastBegin());
+
+  const params = query.length
+    ? {
+        q: query,
+      }
+    : {
+        lat: latitude,
+        lon: longitude,
+      };
 
   weather
     .get('/forecast/daily', {
       params: {
-        q: query,
+        ...params,
         appid: process.env.REACT_APP_API_KEY,
       },
     })
