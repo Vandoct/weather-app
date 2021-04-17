@@ -8,6 +8,10 @@ const HeaderStyled = styled.header`
   align-content: stretch;
   align-items: center;
   padding: 1em;
+
+  img {
+    cursor: pointer;
+  }
 `;
 
 export default HeaderStyled;

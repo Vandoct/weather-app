@@ -13,104 +13,112 @@ import {
 } from './actions';
 
 export const getCurrentWeather = (query, latitude, longitude) => (dispatch) => {
-  dispatch(weatherCurrentBegin());
+  return new Promise((resolve, reject) => {
+    dispatch(weatherCurrentBegin());
 
-  const params = query.length
-    ? {
-        q: query,
-      }
-    : {
-        lat: latitude,
-        lon: longitude,
-      };
+    const params = query.length
+      ? {
+          q: query,
+        }
+      : {
+          lat: latitude,
+          lon: longitude,
+        };
 
-  weather
-    .get('/weather', {
-      params: {
-        ...params,
-        appid: process.env.REACT_APP_API_KEY,
-      },
-    })
-    .then(({ data }) => {
-      const result = {
-        info: {
-          city: data.name,
-          temp: {
-            celcius: convertKelvinToCelcius(data.main.temp),
-            farenheit: convertKelvinToFarenheit(data.main.temp),
-          },
-          weather: data.weather[0].main,
-          icon: data.weather[0].icon,
+    weather
+      .get('/weather', {
+        params: {
+          ...params,
+          appid: process.env.REACT_APP_API_KEY,
         },
-        detail: {
-          feels: {
-            celcius: convertKelvinToCelcius(data.main.feels_like),
-            farenheit: convertKelvinToFarenheit(data.main.feels_like),
+      })
+      .then(({ data }) => {
+        const result = {
+          info: {
+            city: data.name,
+            temp: {
+              celcius: convertKelvinToCelcius(data.main.temp),
+              farenheit: convertKelvinToFarenheit(data.main.temp),
+            },
+            weather: data.weather[0].main,
+            icon: data.weather[0].icon,
           },
-          min: {
-            celcius: convertKelvinToCelcius(data.main.temp_min),
-            farenheit: convertKelvinToFarenheit(data.main.temp_min),
+          detail: {
+            feels: {
+              celcius: convertKelvinToCelcius(data.main.feels_like),
+              farenheit: convertKelvinToFarenheit(data.main.feels_like),
+            },
+            min: {
+              celcius: convertKelvinToCelcius(data.main.temp_min),
+              farenheit: convertKelvinToFarenheit(data.main.temp_min),
+            },
+            max: {
+              celcius: convertKelvinToCelcius(data.main.temp_max),
+              farenheit: convertKelvinToFarenheit(data.main.temp_max),
+            },
+            humidity: data.main.humidity,
+            pressure: data.main.pressure,
+            wind: data.wind.speed,
           },
-          max: {
-            celcius: convertKelvinToCelcius(data.main.temp_max),
-            farenheit: convertKelvinToFarenheit(data.main.temp_max),
-          },
-          humidity: data.main.humidity,
-          pressure: data.main.pressure,
-          wind: data.wind.speed,
-        },
-      };
+        };
 
-      dispatch(weatherCurrentSuccess(result));
-    })
-    .catch((error) => {
-      dispatch(weatherCurrentError(error));
-    });
+        dispatch(weatherCurrentSuccess(result));
+        resolve('Success');
+      })
+      .catch(({ response }) => {
+        dispatch(weatherCurrentError(response.data.message));
+        reject(response.data.message);
+      });
+  });
 };
 
 export const getWeatherForecast = (query, latitude, longitude) => (
   dispatch
 ) => {
-  dispatch(weatherForecastBegin());
+  return new Promise((resolve, reject) => {
+    dispatch(weatherForecastBegin());
 
-  const params = query.length
-    ? {
-        q: query,
-      }
-    : {
-        lat: latitude,
-        lon: longitude,
-      };
-
-  weather
-    .get('/forecast/daily', {
-      params: {
-        ...params,
-        appid: process.env.REACT_APP_API_KEY,
-      },
-    })
-    .then(({ data }) => {
-      const days = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-      const result = data.list.map((forecast, index) => {
-        return {
-          id: forecast.dt,
-          day: days[index],
-          icon: forecast.weather[0].icon,
-          weather: forecast.weather[0].main,
-          min: {
-            celcius: convertKelvinToCelcius(forecast.temp.min),
-            farenheit: convertKelvinToFarenheit(forecast.temp.min),
-          },
-          max: {
-            celcius: convertKelvinToCelcius(forecast.temp.max),
-            farenheit: convertKelvinToFarenheit(forecast.temp.max),
-          },
+    const params = query.length
+      ? {
+          q: query,
+        }
+      : {
+          lat: latitude,
+          lon: longitude,
         };
-      });
 
-      dispatch(weatherForecastSuccess(result));
-    })
-    .catch((error) => {
-      dispatch(weatherForecastError(error));
-    });
+    weather
+      .get('/forecast/daily', {
+        params: {
+          ...params,
+          appid: process.env.REACT_APP_API_KEY,
+        },
+      })
+      .then(({ data }) => {
+        const days = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+        const result = data.list.map((forecast, index) => {
+          return {
+            id: forecast.dt,
+            day: days[index],
+            icon: forecast.weather[0].icon,
+            weather: forecast.weather[0].main,
+            min: {
+              celcius: convertKelvinToCelcius(forecast.temp.min),
+              farenheit: convertKelvinToFarenheit(forecast.temp.min),
+            },
+            max: {
+              celcius: convertKelvinToCelcius(forecast.temp.max),
+              farenheit: convertKelvinToFarenheit(forecast.temp.max),
+            },
+          };
+        });
+
+        dispatch(weatherForecastSuccess(result));
+        resolve('Success');
+      })
+      .catch(({ response }) => {
+        dispatch(weatherForecastError(response.data.message));
+        reject(response.data.message);
+      });
+  });
 };

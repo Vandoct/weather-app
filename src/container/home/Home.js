@@ -31,7 +31,17 @@ const Home = () => {
   const onResultClicked = (result) => {
     const city = result.split(',')[0];
     dispatch(search(''));
-    dispatch(getCurrentWeather(city));
+    dispatch(getCurrentWeather(city)).catch((error) =>
+      toast.error(error, {
+        position: 'bottom-right',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      })
+    );
     dispatch(getWeatherForecast(city));
   };
 
@@ -68,13 +78,13 @@ const Home = () => {
     }
   };
 
-  const handleToggle = () => {
+  const handleTemperatureToggle = () => {
     setIsCelcius((prevState) => !prevState);
   };
 
   return (
     <>
-      <Header />
+      <Header githubUrl="https://github.com/Vandoct/weather-app" />
       <SearchBar
         cities={places}
         onSearchChanged={onSearchChanged}
@@ -85,7 +95,7 @@ const Home = () => {
       {!isEmptyObject(weather) && (
         <CurrentWeather
           isCelcius={isCelcius}
-          onToggle={handleToggle}
+          onToggle={handleTemperatureToggle}
           city={weather.info.city}
           icon={weather.info.icon}
           temp={
