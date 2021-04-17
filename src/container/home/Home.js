@@ -6,14 +6,14 @@ import { useDebouncedEffect } from 'hooks/useDebouncedEffect';
 import { useOutsideAlerter } from 'hooks/useOutsideAlerter';
 import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmptyObject } from 'utils/helper';
-import { getCurrentWeather, search } from '../../redux';
+import { isEmptyArray, isEmptyObject } from 'utils/helper';
+import { getCurrentWeather, getWeatherForecast, search } from '../../redux';
 
 const Home = () => {
   const [query, setQuery] = useState('');
   const [isCelcius, setIsCelcius] = useState(true);
   const { places } = useSelector((state) => state.places);
-  const { weather } = useSelector((state) => state.weather);
+  const { weather, forecasts } = useSelector((state) => state.weather);
   const dispatch = useDispatch();
   const searchRef = useRef(null);
 
@@ -31,6 +31,7 @@ const Home = () => {
     const city = result.split(',')[0];
     dispatch(search(''));
     dispatch(getCurrentWeather(city));
+    dispatch(getWeatherForecast(city));
   };
 
   const handleToggle = () => {
@@ -76,7 +77,9 @@ const Home = () => {
           wind={weather.detail.wind}
         />
       )}
-      <ExtendedForecast />
+      {!isEmptyArray(forecasts) && (
+        <ExtendedForecast forecasts={forecasts} isCelcius={isCelcius} />
+      )}
     </>
   );
 };

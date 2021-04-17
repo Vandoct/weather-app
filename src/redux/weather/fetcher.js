@@ -7,6 +7,9 @@ import {
   weatherCurrentBegin,
   weatherCurrentSuccess,
   weatherCurrentError,
+  weatherForecastBegin,
+  weatherForecastSuccess,
+  weatherForecastError,
 } from './actions';
 
 export const getCurrentWeather = (query) => (dispatch) => {
@@ -53,5 +56,41 @@ export const getCurrentWeather = (query) => (dispatch) => {
     })
     .catch((error) => {
       dispatch(weatherCurrentError(error));
+    });
+};
+
+export const getWeatherForecast = (query) => (dispatch) => {
+  dispatch(weatherForecastBegin());
+
+  weather
+    .get('/forecast/daily', {
+      params: {
+        q: query,
+        appid: process.env.REACT_APP_API_KEY,
+      },
+    })
+    .then(({ data }) => {
+      const days = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+      const result = data.list.map((forecast, index) => {
+        return {
+          id: forecast.dt,
+          day: days[index],
+          icon: forecast.weather[0].icon,
+          weather: forecast.weather[0].main,
+          min: {
+            celcius: convertKelvinToCelcius(forecast.temp.min),
+            farenheit: convertKelvinToFarenheit(forecast.temp.min),
+          },
+          max: {
+            celcius: convertKelvinToCelcius(forecast.temp.max),
+            farenheit: convertKelvinToFarenheit(forecast.temp.max),
+          },
+        };
+      });
+
+      dispatch(weatherForecastSuccess(result));
+    })
+    .catch((error) => {
+      dispatch(weatherForecastError(error));
     });
 };
